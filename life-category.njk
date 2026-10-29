@@ -1,0 +1,24 @@
+---
+layout: layouts/base.njk
+pagination:
+  data: life
+  size: 1
+  alias: cat
+  addAllPagesToCollections: false
+eleventyComputed:
+  title: "{{ cat.name }}"
+  description: "菜菜的生活紀錄：{{ cat.desc }}。"
+permalink: "/life/{{ cat.slug }}/"
+locked: true
+---
+{%- set listPosts = collections.posts | withTag(cat.name) | reverse %}
+<article class="page">
+  <p class="crumb"><a href="/life/">生活</a> ／ 分類</p>
+  <h1 class="page-title">{{ cat.name }}</h1>
+  <p class="page-sub">{{ cat.desc }}</p>
+  {%- if listPosts.length %}
+  {% include "post-list.njk" %}
+  {%- else %}
+  <p class="empty-note">還沒有文章。寫文章時在 tags 加上「{{ cat.name }}」，就會出現在這裡。</p>
+  {%- endif %}
+</article>

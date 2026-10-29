@@ -1,0 +1,36 @@
+---
+layout: layouts/base.njk
+permalink: /
+---
+{%- set posts = collections.posts | reverse %}
+<h1 class="visually-hidden">{{ site.title }}：最新文章</h1>
+{%- if posts.length %}
+<ol class="bb-posts">
+  {%- for post in posts %}
+  {%- set tag = post.data.tags[0] if (post.data.tags and post.data.tags.length) else "" %}
+  <li class="bb-post">
+    <h2 class="bb-post-title"><a href="{{ post.url }}">{{ post.data.title }}</a></h2>
+    <p class="bb-post-meta">
+      <time datetime="{{ post.date | isoDate }}">{{ post.date | dateDot }}</time>
+      {%- for t in post.data.tags or [] %}<a class="bb-tag" href="{{ t | tagUrl }}">{{ t }}</a>{% endfor %}
+    </p>
+    <a class="bb-cover" href="{{ post.url }}" tabindex="-1" aria-hidden="true">
+      {%- if post.data.cover %}
+      <img src="{{ post.data.cover }}" alt="" loading="{{ 'eager' if loop.first else 'lazy' }}">
+      {%- else %}
+      <span class="bb-cover-art"><span class="bb-cover-tag">{{ tag or "筆記" }}</span><span class="bb-cover-title">{{ post.data.title }}</span></span>
+      {%- endif %}
+    </a>
+    {%- if post.data.locked %}
+    <p class="bb-excerpt bb-locked"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>這篇文章需要密碼才能閱讀。</p>
+    <p class="bb-more"><a href="{{ post.url }}">輸入密碼閱讀</a></p>
+    {%- else %}
+    <p class="bb-excerpt">{{ post | excerptLong }}</p>
+    <p class="bb-more"><a href="{{ post.url }}">繼續閱讀</a></p>
+    {%- endif %}
+  </li>
+  {%- endfor %}
+</ol>
+{%- else %}
+<p class="empty-note">還沒有文章。到 GitHub 的 posts 資料夾新增一個 .md 檔，就會出現在這裡。</p>
+{%- endif %}

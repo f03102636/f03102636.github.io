@@ -1,0 +1,45 @@
+---
+layout: layouts/base.njk
+---
+<article class="post">
+  <header class="post-head">
+    <h1 class="post-title">{{ title }}</h1>
+    <p class="post-meta">
+      <time datetime="{{ page.date | isoDate }}">{{ page.date | dateZh }}</time>
+      {%- if updated %}<span>更新於 {{ updated | dateZh }}</span>{% endif %}
+      <span>約 {{ content | readingMinutes }} 分鐘讀完</span>
+    </p>
+    {%- if tags and tags.length %}
+    <p class="tag-row">{% for tag in tags %}<a class="tag" href="{{ tag | tagUrl }}">#{{ tag }}</a>{% endfor %}</p>
+    {%- endif %}
+  </header>
+
+  {%- set tocItems = content | toc %}
+  {%- if tocItems.length >= 3 %}
+  <details class="toc">
+    <summary>目錄</summary>
+    <ol>
+      {%- for item in tocItems %}
+      <li class="toc-l{{ item.level }}"><a href="#{{ item.id }}">{{ item.text }}</a></li>
+      {%- endfor %}
+    </ol>
+  </details>
+  {%- endif %}
+
+  <div class="prose">
+    {{ content | safe }}
+  </div>
+
+  {%- set prevPost = collections.posts | getPreviousCollectionItem(page) %}
+  {%- set nextPost = collections.posts | getNextCollectionItem(page) %}
+  {%- if prevPost or nextPost %}
+  <nav class="post-nav" aria-label="其他文章">
+    {%- if prevPost %}
+    <a class="post-nav-link prev" href="{{ prevPost.url }}"><span class="post-nav-label">上一篇</span><span class="post-nav-title">{{ prevPost.data.title }}</span></a>
+    {%- endif %}
+    {%- if nextPost %}
+    <a class="post-nav-link next" href="{{ nextPost.url }}"><span class="post-nav-label">下一篇</span><span class="post-nav-title">{{ nextPost.data.title }}</span></a>
+    {%- endif %}
+  </nav>
+  {%- endif %}
+</article>

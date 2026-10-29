@@ -1,0 +1,26 @@
+---
+layout: layouts/base.njk
+title: 生活
+description: 菜菜學習以外的日子：旅行、興趣和日常。
+permalink: /life/
+locked: true
+---
+<article class="page">
+  <h1 class="page-title">生活</h1>
+  <p class="page-sub">學習以外的日子。</p>
+  <ul class="subject-grid">
+    {%- for c in life %}
+    {%- set n = (collections.posts | withTag(c.name)).length %}
+    <li><a href="/life/{{ c.slug }}/"><span class="sg-name">{{ c.name }}</span><span class="sg-goal">{{ c.desc }}</span><span class="sg-meta">{{ n }} 篇</span></a></li>
+    {%- endfor %}
+  </ul>
+  {%- for c in life %}
+  {%- set listPosts = collections.posts | withTag(c.name) | reverse %}
+  {%- if listPosts.length %}
+  <section class="life-section">
+    <h2><a href="/life/{{ c.slug }}/">{{ c.name }}</a></h2>
+    {% include "post-list.njk" %}
+  </section>
+  {%- endif %}
+  {%- endfor %}
+</article>

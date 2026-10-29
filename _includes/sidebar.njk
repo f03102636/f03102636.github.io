@@ -1,0 +1,76 @@
+<aside class="bb-side" aria-label="側欄">
+  <section class="side-box side-profile">
+    {%- if site.avatar %}
+    <img class="side-avatar" src="{{ site.avatar }}" alt="{{ site.author }}的照片" width="320" height="320" loading="lazy">
+    {%- else %}
+    <div class="side-avatar side-avatar-art" aria-hidden="true">
+      <svg viewBox="0 0 32 32"><use href="#sprout-3"/></svg>
+    </div>
+    {%- endif %}
+    <p class="side-hello">嗨，我是{{ site.author }}！</p>
+    <p class="side-intro">{{ site.tagline }}</p>
+    <p class="side-link"><a href="/about/">更多關於我</a></p>
+  </section>
+
+  <section class="side-box">
+    <h2 class="side-title">站內搜尋</h2>
+    <form class="side-search" action="/search/" method="get" role="search">
+      <label class="visually-hidden" for="side-q">搜尋文章</label>
+      <input id="side-q" name="q" type="search" placeholder="輸入關鍵字">
+      <button type="submit">搜尋</button>
+    </form>
+  </section>
+
+  <section class="side-box side-now" data-plan data-start="{{ plan.start }}" data-entry="{{ plan.entry }}">
+    <h2 class="side-title">學習進度</h2>
+    <div data-now hidden>
+      <p class="side-now-week">第 <b data-now-week data-plain>1</b> 週<small>／49</small></p>
+      <div class="side-bar" aria-hidden="true"><i data-progress></i></div>
+      <p class="side-now-meta"><span data-now-phase></span>　距離入學 <b data-now-days>0</b> 天</p>
+    </div>
+    {%- for ph in plan.phases %}<span hidden data-phase-w0="{{ ph.w0 }}" data-phase-w1="{{ ph.w1 }}" data-phase-name="{{ ph.name }}"></span>{% endfor %}
+    <p class="side-link"><a href="/plan/">看完整計畫</a></p>
+  </section>
+
+  {%- set recent = collections.posts | reverse | head(5) %}
+  {%- if recent.length %}
+  <section class="side-box">
+    <h2 class="side-title">最新文章</h2>
+    <ul class="side-list">
+      {%- for post in recent %}<li><a href="{{ post.url }}">{{ post.data.title }}</a></li>{% endfor %}
+    </ul>
+  </section>
+  {%- endif %}
+
+  <section class="side-box">
+    <h2 class="side-title">分類</h2>
+    <ul class="side-cats">
+      <li class="side-cat-group">學習科目
+        <ul>
+          {%- for s in plan.subjects %}
+          {%- set n = (collections.posts | withTag(s.tag)).length %}
+          <li><a href="/learn/{{ s.slug }}/">{{ s.short }}</a><span>({{ n }})</span></li>
+          {%- endfor %}
+        </ul>
+      </li>
+      <li class="side-cat-group">生活
+        <ul>
+          {%- for c in life %}
+          <li><a href="/life/{{ c.slug }}/">{{ c.name }}</a><span>({{ (collections.posts | withTag(c.name)).length }})</span></li>
+          {%- endfor %}
+        </ul>
+      </li>
+    </ul>
+  </section>
+
+  <section class="side-box">
+    <h2 class="side-title">學習工具</h2>
+    <ul class="side-list">
+      <li><a href="/plan/monthly/">每月進度</a></li>
+      <li><a href="/exams/">考試時程</a></li>
+      <li><a href="/toolbox/">工具箱</a></li>
+      <li><a href="/tags/">所有標籤</a></li>
+    </ul>
+  </section>
+</aside>
+<script src="/assets/js/plan.js" defer></script>
